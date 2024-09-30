@@ -2,11 +2,12 @@
 
 using namespace std;
 
+// main function: output results to console.
 int main() {
 
 	int user_int; 
 	double user_double;
-	string user_str;
+	char user_char;
 
 	cout << "Size in bytes of a character: " << sizeof(char) << endl;
 	cout << "Size in bytes of an integer: " << sizeof(int) << endl;
@@ -29,15 +30,15 @@ int main() {
 	cout << "Enter a real number: ";
 	cin >> user_double;
 
-	cout << fixed << setprecision(3) << user_double << endl;
+	// Based on the lab document example output, here we assumed "3 significant digits" to be 3 decimal places. 
+	cout << setprecision(3) << user_double << endl;
 	cout << scientific << setprecision(3) << user_double << endl;
 
-	// A character or a string? Ask professor.
 	cout << "Enter a character: ";
-	cin >> user_str;
+	cin >> user_char;
 
-	cout << user_str[0] << endl;
-	printf("%d\n", user_str[0]);
+	cout << user_char << endl;
+	printf("%d\n", user_char);
 
 	return 0;
 }

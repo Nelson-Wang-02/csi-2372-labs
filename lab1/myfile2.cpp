@@ -13,13 +13,19 @@ int count_sur = 0;
 
 The main function does the following: 
 
-	if choice == 1: calculate area of disk
+	if choice == 1: calculate area of disk/circle
 	if choice == 2: calculate volume of cylinder
 	if choice == 3: exit the program.
 	else: nothing.
 */
 
-// 2. i) Calculate area of a circle or surface area of disk.
+/* 2. i) Surface function : Calculate area of a circle or surface area of disk. Returns the number of calls to the function.
+* Inputs: 
+*	- ray: double; constant real number passed by reference.
+* 
+* Output: 
+*	- count_sur : int;
+*/
 int surface(double const& ray) {
 
 	cout << "The surface is: " << (Pi * ray * ray) << endl;
@@ -27,7 +33,14 @@ int surface(double const& ray) {
 	return ++count_sur;
 }
 
-// 2. ii) Calculate volume of cylinder
+/* 2. ii) Calculate volume of cylinder. Returns the number of calls to the function.
+* Inputs: 
+*	- ray : double; constant real number passed by reference.
+*	- height : double; constant real number passed by reference.
+* 
+* Output:
+*	- count_vol : int;
+*/
 int volume(double const& ray, double const& height) {
 
 	cout << "The volume is: " << (Pi * ray * ray * height) << endl;
@@ -35,6 +48,7 @@ int volume(double const& ray, double const& height) {
 	return ++count_vol;
 }
 
+/* menu Function: displays an option menu and returns the chosen option*/
 char menu(void) {
 	char choice;
 	cout << "What do you want to do?:" << endl << endl;
@@ -47,6 +61,7 @@ char menu(void) {
 	cout << endl;
 }
 
+/*main Function*/
 int main() {
 	char choice;
 	int nvolume = 0; //number of times the volume function has been executed
