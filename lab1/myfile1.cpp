@@ -30,9 +30,9 @@ int main() {
 	cout << "Enter a real number: ";
 	cin >> user_double;
 
-	// Based on the lab document example output, here we assumed "3 significant digits" to be 3 decimal places. 
+	// Set three significant figures.
 	cout << setprecision(3) << user_double << endl;
-	cout << scientific << setprecision(3) << user_double << endl;
+	cout << setprecision(2) << scientific << user_double << endl;
 
 	cout << "Enter a character: ";
 	cin >> user_char;
