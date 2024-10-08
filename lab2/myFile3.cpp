@@ -1,35 +1,24 @@
 /*myFile3.cpp : Ex3 a2 CSI2372A*/
 
 #include <iostream>
-#include <vector>
 using namespace std;
 
 int** triangleInf(int n)
 {
-	//YOUR CODE
-	int p = 0;
+	int** p = new int* [n];
 
-	vector<vector<int>> grid(n, vector<int>(n));
-
-	for (int i = 0; i <= n; i++) {
-
-		for (int j = 0; j <= p; p++) {
-
-			if (j == 0) {
-				cout << 1;
+	for (int i = 0; i < n; i++) {
+		p[i] = new int[i+1];
+		for (int j = 0; j <= i; j++) {
+			if (j == 0 || j == i) {
+				p[i][j] = 1;
 			}
-
 			else {
-
+				p[i][j] = p[i - 1][j - 1] + p[i - 1][j];
 			}
-
-			
-
 		}
-		cout << endl;
-		p++;
 	}
-
+	return p;
 }
 
 int main() {
