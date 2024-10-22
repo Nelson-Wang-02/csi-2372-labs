@@ -6,6 +6,7 @@ int main()
 {
 	int choice; 
 	int number;
+	int size;
 	Evaluation* first = nullptr;
 
 	do
@@ -27,14 +28,19 @@ int main()
 		case 2:  
 			cout << "After which element do you want to insert into? (0 for start): ";
 			cin >> number;
+			size = number + 1;
 
 			first = add(first, number);
 
 			break;
 			
-		case 3: first = remove(first, number);
+		case 3: 
+			cout << "What is the number of the element to delete? ";
+			cin >> number;
+			size -= 1;
+			first = remove(first, number);
 			break;
-		case 4: average(first, number);
+		case 4: average(first, size);
 			break;
 		case 5: exit(0);
 		default:
@@ -101,8 +107,34 @@ Evaluation* add(Evaluation* p, int& number)
 
 Evaluation* remove(Evaluation* p, int& number)
 {
-	//YOUR CODE COMES HERE
-	return NULL;
+	if (number <= 0 || p == nullptr) {
+		std::cout << "Invlaid index" << std::endl;
+		return p;
+	}
+
+	Evaluation* current = p;
+	Evaluation* prev = nullptr;
+
+	if (number == 1) {
+		p = current -> next;
+		delete current;
+		return p;
+	}
+
+	for (int i = 1; current != nullptr && i < number; ++i) {
+		prev = current;
+		current = current->next;
+	}
+
+	if (current == nullptr) {
+		std::cout << "Position out of bounds!" << std::endl;
+		return p;
+	}
+
+	prev->next = current->next;
+	delete current;
+
+	return p;
 }
 
 
@@ -132,8 +164,23 @@ void display(Evaluation* p)
 ***/
 int average(Evaluation* p, int const& nbre)
 {
-	//YOUR CODE COMES HERE
-	return NULL;
+	if (nbre == 0 || p == nullptr) {
+		std::cout << "All did not go well" << std::endl;
+		return 0;
+	}
+
+	Evaluation* current = p;
+	int total = 0;
+
+	while (current != nullptr) {
+		total += current->grade;
+		current = current->next;
+	}
+
+	float avg = static_cast<float>(total) / nbre;
+	std::cout << "The average is : " << avg << std::endl;
+
+	return 1;
 }
 
 /** 
