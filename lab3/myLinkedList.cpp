@@ -113,7 +113,7 @@ Evaluation* remove(Evaluation* p, int& number)
 	cout << "What is the number of the element to delete? ";
 	cin >> user_pos;
 
-	if (user_pos < 0 || user_pos > number) {
+	if (user_pos < 1 || user_pos > number) {
 		cout << "Invalid index" << endl;
 		return p;
 	}
