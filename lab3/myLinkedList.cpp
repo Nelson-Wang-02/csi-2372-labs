@@ -5,8 +5,7 @@
 int main()
 {
 	int choice; 
-	int number;
-	int size;
+	int number = 0; // Size or Number of elements in linked list.
 	Evaluation* first = nullptr;
 
 	do
@@ -21,28 +20,20 @@ int main()
 
 		switch (choice)
 		{
-		case 1: 
-			display(first);
+		case 1: display(first);
 			break;
 
-		case 2:  
-			cout << "After which element do you want to insert into? (0 for start): ";
-			cin >> number;
-			size = number + 1;
-
-			first = add(first, number);
-
+		case 2: first = add(first, number);
 			break;
 			
-		case 3: 
-			cout << "What is the number of the element to delete? ";
-			cin >> number;
-			size -= 1;
-			first = remove(first, number);
+		case 3: first = remove(first, number);
 			break;
-		case 4: average(first, size);
+
+		case 4: average(first, number);
 			break;
+
 		case 5: exit(0);
+
 		default:
 			break;
 		}
@@ -58,14 +49,20 @@ int main()
 Evaluation* add(Evaluation* p, int& number)
 {
 	//YOUR CODE COMES HERE
+	int user_pos;
 
-	if (chk_pos(p, number) == false && number != 0) {
-		cout << "A preceding element does not exist. Cannot insert." << endl;
+	// Based on the output example, we are assuming that the first element of the linked list is index 0. 
+	// "After which element" is then interpreted as "At which element" to maintain the behavior seen in the output example.
+	cout << "At which element do you want to insert into? (0 for start): ";
+	cin >> user_pos;
+
+	if (user_pos < 0 || user_pos > number) {
+		cout << endl << "A preceding element does not exist. Cannot insert." << endl;
 		return p;
 	}
 
-	// newlines in buffer will skip inputs. Ignore them so this doesn't happen.
-	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	// newlines in buffer will cause inputs to be skipped. Ignore them so this doesn't happen.
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
 	char student[20];
 	int grade;
@@ -82,19 +79,22 @@ Evaluation* add(Evaluation* p, int& number)
 	eval->grade = grade;
 	eval->next = nullptr;
 
-	if (number == 0) {
+	if (user_pos == 0) {
 		p = eval;
 	}
 	// Loop through the linked list and insert.
 	else {
 		Evaluation* current = p;
 
-		for (int i = 0; i < number - 1; i++) {
+		for (int i = 1; i < user_pos; i++) {
 			current = current->next;
 		}
 
 		current->next = eval;
 	}
+
+	// Update the number of existing elements in the linked list.
+	number++;
 
 	return p;
 
@@ -107,32 +107,36 @@ Evaluation* add(Evaluation* p, int& number)
 
 Evaluation* remove(Evaluation* p, int& number)
 {
-	if (number <= 0 || p == nullptr) {
-		std::cout << "Invlaid index" << std::endl;
+	int user_pos;
+	
+	// Contrary to adding an element, the behavior seen in the output example now assumes that the first element of the linked list is of index 1.
+	cout << "What is the number of the element to delete? ";
+	cin >> user_pos;
+
+	if (user_pos < 0 || user_pos > number) {
+		cout << "Invalid index" << endl;
 		return p;
 	}
 
 	Evaluation* current = p;
 	Evaluation* prev = nullptr;
 
-	if (number == 1) {
+	if (user_pos == 1) {
 		p = current -> next;
 		delete current;
 		return p;
 	}
 
-	for (int i = 1; current != nullptr && i < number; ++i) {
+	for (int i = 1; i < user_pos; ++i) {
 		prev = current;
 		current = current->next;
 	}
 
-	if (current == nullptr) {
-		std::cout << "Position out of bounds!" << std::endl;
-		return p;
-	}
-
 	prev->next = current->next;
+
 	delete current;
+
+	number--;
 
 	return p;
 }
@@ -149,7 +153,7 @@ void display(Evaluation* p)
 	Evaluation* current = p;
 
 	while (current != nullptr) {
-		cout << "Student: " << current->student << endl;
+		cout << endl << "Student: " << current->student << endl;
 		cout << "Grade: " << current->grade << endl; 
 
 		current = current->next;
@@ -165,7 +169,7 @@ void display(Evaluation* p)
 int average(Evaluation* p, int const& nbre)
 {
 	if (nbre == 0 || p == nullptr) {
-		std::cout << "All did not go well" << std::endl;
+		cout << "All did not go well" << endl;
 		return 0;
 	}
 
@@ -178,37 +182,8 @@ int average(Evaluation* p, int const& nbre)
 	}
 
 	float avg = static_cast<float>(total) / nbre;
-	std::cout << "The average is : " << avg << std::endl;
+	cout << "The average is : " << avg << endl;
 
 	return 1;
 }
-
-/** 
- user-defined chk_pos() Function
- Checks if it is possible to reach the defined index by ensuring that there are preceding elements.
-**/
-
-bool chk_pos(Evaluation* head, int& index) {
-
-	int i = 0;
-
-	Evaluation* current = head;
-
-	while (current != nullptr) {
-
-		if (i == index - 1) {
-			return true;
-		}
-
-		current = current->next;
-
-		i++;
-	}
-
-	return false;
-}
-
-
-
-
 
