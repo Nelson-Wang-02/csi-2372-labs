@@ -42,7 +42,7 @@ double Student::average() {
 		avg += List_grades[i];
 	}
 
-	return (avg / 2);
+	return (avg / nbCourses);
 }
 
 int Student::totalHours() {
