@@ -23,5 +23,39 @@ Card::Card(color c, int v) {
 }
 
 void Card::write() {
-    cout << val << " of " << col << endl;
+    string out;
+    string suit;
+    if (col == 0) {
+        suit = "Clubs";
+    }
+    else if (col == 1) {
+        suit = "Diamonds";
+    }
+    else if (col == 2) {
+        suit = "Hearts";
+    }
+    else {
+        suit = "Spades";
+    }
+
+
+    if (val == 11) {
+        out = "Jack";
+        cout << out << " of " << suit << endl;
+    }
+    else if (val == 12) {
+        out = "Queen";
+        cout << out << " of " << suit << endl;
+    }
+    else if (val == 13) {
+        out = "King";
+        cout << out << " of " << suit << endl;
+    }
+    else if (val == 1) {
+        out = "Ace";
+        cout << out << " of " << suit << endl;
+    }
+    else {
+        cout << val << " of " << suit << endl;
+    }
 }

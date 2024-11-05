@@ -35,7 +35,7 @@ void CardsSet::shuffle() {
     srand(time(0));
 
     //fisher-yates shuffle algorithm
-    for (int i = number; i > 0; i--) {
+    for (int i = number - 1; i > 0; i--) {
         int rand_index = rand() % (i + 1); // Index between 0 and i.
 
         swap(set[i], set[rand_index]);
@@ -48,7 +48,7 @@ Card CardsSet::take() {
 
     if (number <= 0) {
         cout << "There are no more cards in the set!" << endl;
-        return;
+        return set[number];
     }
 
     Card c = set[number - 1];
@@ -73,7 +73,7 @@ Card CardsSet::lookIn(int no){
     if (no > number) {
         cout << "Invalid position: over number of available cards." << endl;
 
-        return;
+        return set[no];
     }  
 
     Card c = set[no];
