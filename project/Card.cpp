@@ -1,46 +1,152 @@
-#include "include.h"
+#include "Card.h"
 
-class Card {
-    private:
-        /* data */
+//Derived bean card classes
+//Blue
+int Blue::getCardsPerCoin(int coins) const {
+    switch (coins) {
+    case 1: return 4;
+    case 2: return 6;
+    case 3: return 8;
+    case 4: return 10;
+    default: return 0;
+    }
+}
 
+std::string Blue::getName() const {
+    return "Blue";
+}
 
-    public:
-        virtual int getCardsPerCoin(int coins) = 0;
-        virtual string getName() = 0;
-        virtual void print(ostream& out) = 0;
-};
+void Blue::print(std::ostream& out) const {
+    out << "B";
+}
 
+//Chili
+int Chili::getCardsPerCoin(int coins) const {
+    switch (coins) {
+    case 1: return 3;
+    case 2: return 6;
+    case 3: return 8;
+    case 4: return 9;
+    default: return 0;
+    }
+}
 
-class Blue {
+std::string Chili::getName() const {
+    return "Chili";
+}
 
-};
+void Chili::print(std::ostream& out) const {
+    out << "C";
+}
 
-class Chili {
+//Stink
+int Stink::getCardsPerCoin(int coins) const {
+    switch (coins) {
+    case 1: return 3;
+    case 2: return 5;
+    case 3: return 7;
+    case 4: return 8;
+    default: return 0;
+    }
+}
 
-};
+std::string Stink::getName() const {
+    return "Stink";
+}
 
-class Stink {
+void Stink::print(std::ostream& out) const {
+    out << "S";
+}
 
-};
+//Green
+int Green::getCardsPerCoin(int coins) const {
+    switch (coins) {
+    case 1: return 3;
+    case 2: return 5;
+    case 3: return 6;
+    case 4: return 7;
+    default: return 0;
+    }
+}
 
-class Green {
+std::string Green::getName() const {
+    return "Green";
+}
 
-};
+void Green::print(std::ostream& out) const {
+    out << "G";
+}
 
-class Soy {
+//Soy
+int Soy::getCardsPerCoin(int coins) const {
+    switch (coins) {
+    case 1: return 2;
+    case 2: return 4;
+    case 3: return 6;
+    case 4: return 7;
+    default: return 0;
+    }
+}
 
-};
+std::string Soy::getName() const {
+    return "Soy";
+}
 
-class Black {
+void Soy::print(std::ostream& out) const {
+    out << "s";
+}
 
-};
+//Black
+int Black::getCardsPerCoin(int coins) const {
+    switch (coins) {
+    case 1: return 2;
+    case 2: return 4;
+    case 3: return 5;
+    case 4: return 6;
+    default: return 0;
+    }
+}
 
-class Red {
+std::string Black::getName() const {
+    return "Black";
+}
 
-};
+void Black::print(std::ostream& out) const {
+    out << "b";
+}
 
-class Garden {
+//Red
+int Red::getCardsPerCoin(int coins) const {
+    switch (coins) {
+    case 1: return 2;
+    case 2: return 3;
+    case 3: return 4;
+    case 4: return 5;
+    default: return 0;
+    }
+}
 
-};
+std::string Red::getName() const {
+    return "Red";
+}
 
+void Red::print(std::ostream& out) const {
+    out << "R";
+}
+
+//Garden
+int Garden::getCardsPerCoin(int coins) const {
+    switch (coins) {
+    case 2: return 2;
+    case 3: return 3;
+    default: return 0;
+    }
+}
+
+std::string Garden::getName() const {
+    return "Garden";
+}
+
+void Garden::print(std::ostream& out) const {
+    out << "g";
+}

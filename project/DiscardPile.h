@@ -11,47 +11,15 @@ private:
 
 public:
     //Constructor for loading game from file
-    DiscardPile(std::istream& in, const CardFactory* cardFactory) {
-        std::string cardType;
-        while (in >> cardType) {
-            pile.push_back(cardFactory->createCard(cardType));
-        }
-    }
+    DiscardPile(std::istream& in, const CardFactory* factory);
 
-    // Discards a card
-    DiscardPile& operator+=(Card* card) {
-        pile.push_back(card);
-        return *this;
-    }
+    DiscardPile& operator+=(Card* card);
 
-    // Removes and returns top card from discard pile
-    Card* pickUp() {
-        if (pile.empty()) {
-            throw std::runtime_error("DiscardPile is empty");
-        }
-        Card* topCard = pile.back();
-        pile.pop_back();
-        return topCard;
-    }
+    Card* pickUp();
 
-    // Returns top card from discard pile (without remove)
-    Card* top() const {
-        if (pile.empty()) {
-            throw std::runtime_error("DiscardPile is empty");
-        }
-        return pile.back();
-    }
+    Card* top() const;
 
-    void print(std::ostream& out) const {
-        for (const auto& card : pile) {
-            out << *card << " ";
-        }
-    }
+    void print(std::ostream& out) const;
 
-    friend std::ostream& operator<<(std::ostream& out, const DiscardPile& discardPile) {
-        if (!discardPile.pile.empty()) {
-            out << *(discardPile.pile.back());
-        }
-        return out;
-    }
+    friend std::ostream& operator<<(std::ostream& out, const DiscardPile& pile);
 };
