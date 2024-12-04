@@ -10,6 +10,7 @@ private:
     std::list<Card*> cards;
 
 public:
+    Hand() = default;
     Hand(std::istream& in, const CardFactory* factory);
     Hand& operator+=(Card* card);
     Card* play();

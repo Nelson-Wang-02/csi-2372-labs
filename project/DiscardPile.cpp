@@ -1,6 +1,6 @@
 #include "DiscardPile.h"
 
-//Constructor for loading game from file
+//Constructor for reconstructing DiscardPile from file
 DiscardPile::DiscardPile(std::istream& in, const CardFactory* factory) {
     std::string cardName;
     while (in >> cardName) {
@@ -29,7 +29,8 @@ Card* DiscardPile::pickUp() {
 // Returns top card from discard pile (without remove)
 Card* DiscardPile::top() const {
     if (pile.empty()) {
-        throw std::runtime_error("DiscardPile empty");
+        //throw std::runtime_error("DiscardPile empty");
+        return nullptr;
     }
     return pile.back();
 }

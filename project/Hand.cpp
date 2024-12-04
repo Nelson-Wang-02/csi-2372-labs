@@ -1,6 +1,6 @@
 #include "Hand.h"
 
-//Constructor for loading game from file
+//Constructor for reconstructing hand from file
 Hand::Hand(std::istream& in, const CardFactory* factory) {
     std::string cardName;
     while (in >> cardName) {

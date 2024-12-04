@@ -12,9 +12,14 @@ private:
 
 public:
     TradeArea(std::istream& in, const CardFactory* factory);
+    //Default constructor
+    TradeArea() = default;
     TradeArea& operator+=(Card* card);
     bool legal(Card* card) const;
     Card* trade(const std::string& beanName);
     int numCards() const;
     friend std::ostream& operator<<(std::ostream& out, const TradeArea& tradeArea);
+
+    // Getter
+    std::list<Card*>& getCards();
 };

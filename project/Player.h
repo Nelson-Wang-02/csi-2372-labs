@@ -35,4 +35,10 @@ public:
     void buyThirdChain();
     void printHand(std::ostream& out, bool printAll) const;
     friend std::ostream& operator<<(std::ostream& out, const Player& player);
+    ~Player();
+    // Getter for hand.
+    Hand& getHand();
+    // Getter for chains.
+    std::vector<Chain_Base*>& getChains();
+
 };

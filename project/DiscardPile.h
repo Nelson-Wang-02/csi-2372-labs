@@ -13,6 +13,9 @@ public:
     //Constructor for loading game from file
     DiscardPile(std::istream& in, const CardFactory* factory);
 
+    // Default Constructor
+    DiscardPile() = default;
+
     DiscardPile& operator+=(Card* card);
 
     Card* pickUp();

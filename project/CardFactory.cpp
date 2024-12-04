@@ -28,7 +28,6 @@ CardFactory::CardFactory() {
         cards.push_back(new Garden());
     }
 }
-}
 
 CardFactory::~CardFactory() {
     for (Card* card : cards) {
@@ -43,7 +42,7 @@ CardFactory* CardFactory::getFactory() {
     return instance;
 }
 
-Deck CardFactory::getDeck() {
+Deck CardFactory::getDeck() const {
     Deck deck;
 
     for (Card* card : cards) {

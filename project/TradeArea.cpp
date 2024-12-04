@@ -1,6 +1,6 @@
 #include "TradeArea.h"
 
-//Constructor for loading game from file
+//Constructor for reconstructing TradeArea from file
 TradeArea::TradeArea(std::istream& in, const CardFactory* factory) {
     std::string cardName;
     while (in >> cardName) {
@@ -48,4 +48,9 @@ std::ostream& operator<<(std::ostream& out, const TradeArea& tradeArea) {
         out << " ";
     }
     return out;
+}
+
+// Getter for cards
+std::list<Card*>& TradeArea::getCards() {
+    return cards;
 }

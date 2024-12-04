@@ -1,4 +1,5 @@
 #include "Deck.h"
+#include "CardFactory.h"
 
 Deck::Deck(const std::vector<Card*>& cards) : std::vector<Card*>(cards) {}
 

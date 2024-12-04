@@ -21,5 +21,5 @@ public:
     ~CardFactory();
     static CardFactory* getFactory();
     Card* createCard(const std::string& cardType) const;
-    Deck getDeck();
+    Deck getDeck() const;
 };

@@ -1,7 +1,11 @@
-#include "Player.h"
+#include "Player.h" 
+#include <sstream>
 
 Player::Player(const std::string& name)
-    : name(name), coins(0), maxChains(2), hand(std::cin, nullptr) {}
+    : name(name), coins(0), maxChains(2) {
+
+    chains.resize(maxChains, nullptr);
+}
 
 //Constructor for loading game from file
 Player::Player(std::istream& in, const CardFactory* factory)
@@ -37,7 +41,7 @@ int Player::getMaxNumChains() const {
 int Player::getNumChains() const {
     int nonEmptyChains = 0;
     for (const auto& chain : chains) {
-        if (chain != nullptr && !chain->empty()) {
+        if (chain != nullptr){// && !chain->empty()) {
             ++nonEmptyChains;
         }
     }
@@ -71,7 +75,7 @@ void Player::printHand(std::ostream& out, bool printAll) const {
 }
 
 std::ostream& operator<<(std::ostream& out, const Player& player) {
-    out << player.name << " " << player.coins << " coins" << std::endl;
+    out << player.name << " has " << player.coins << " coins" << std::endl;
     for (const auto& chain : player.chains) {
         if (chain != nullptr) {
             out << *chain << std::endl;
@@ -81,8 +85,16 @@ std::ostream& operator<<(std::ostream& out, const Player& player) {
 }
 
 //Destructor to delete dynamically allocated chains
-~Player() {
+Player::~Player() {
     for (auto& chain : chains) {
         delete chain;
     }
+}
+
+Hand& Player::getHand() {
+    return hand;
+}
+
+std::vector<Chain_Base*>& Player::getChains() {
+    return chains;
 }

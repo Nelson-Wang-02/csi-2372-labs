@@ -18,15 +18,21 @@ public:
         chain.print(out);
         return out;
     }
+
+    // User Defined Functions
+    virtual std::string getChainType() = 0;
+    virtual void addCard(Card* card) = 0;
 };
 
 //Template for chain types (e.g. Chain<Red>)
 template <typename T>
 class Chain : public Chain_Base {
 private:
-    std::vector<T*> cards;
+    std::vector<Card*> cards;
 
 public:
+    Chain() = default;
+    
     //Constructor for loading game from file
     Chain(std::istream& in, const CardFactory* cardFactory) {
         std::string cardType;
@@ -62,6 +68,10 @@ public:
             }
         }
 
+        for (auto card : cards) {
+            delete card;
+        }
+
         cards.clear();
         return coins;
     }
@@ -75,5 +85,15 @@ public:
             card->print(out);
             out << " ";
         }
+    }
+
+    // User-defined function for getting the bean of card.
+    std::string getChainType() {
+        return cards.empty() ? "Empty" : cards[0]->getName();
+    }
+
+    void addCard(Card* card) {
+        operator+=(card);
+
     }
 };
