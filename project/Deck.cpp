@@ -22,6 +22,7 @@ Card* Deck::draw() {
     return topCard;
 }
 
+// The deck is hidden, only used for outputting to file.
 std::ostream& operator<<(std::ostream& out, const Deck& deck) {
     for (const auto& card : deck) {
         card->print(out);

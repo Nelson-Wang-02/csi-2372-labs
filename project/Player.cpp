@@ -65,22 +65,40 @@ void Player::buyThirdChain() {
 }
 
 void Player::printHand(std::ostream& out, bool printAll) const {
+    out << "Hand: ";
+
     if (printAll) {
         out << hand << std::endl;
     }
     else if (Card* topCard = hand.top()) {
-        topCard->print(out);
+        out << topCard->getName();
         out << std::endl;
     }
 }
 
+// Top level output to console.
 std::ostream& operator<<(std::ostream& out, const Player& player) {
-    out << player.name << " has " << player.coins << " coins" << std::endl;
-    for (const auto& chain : player.chains) {
-        if (chain != nullptr) {
-            out << *chain << std::endl;
+    
+    out << player.name << " " << player.coins << " coins" << std::endl;
+
+    out << "Chains: " << std::endl;
+
+    int i = 0;
+    for (auto& chain : player.chains) {
+        out << "[" << i << "] ";
+
+        if (chain == nullptr) {
+            out << "empty";
+        } 
+        else {
+            chain->print(out);
         }
+
+        out << std::endl;
+
+        i++;
     }
+
     return out;
 }
 
@@ -97,4 +115,43 @@ Hand& Player::getHand() {
 
 std::vector<Chain_Base*>& Player::getChains() {
     return chains;
+}
+
+int const Player::getHandCount(){
+    return hand.getCards().size();
+}
+
+// Print function used to output to file.
+void Player::print(std::ostream& out) {
+    out << name << " " << coins << " " << maxChains << " ";
+    for (const auto& chain : chains) {
+        if (chain != nullptr) {
+            out << *chain << "\n";
+        }
+    }
+
+}
+
+Card* Player::discardCard(int index) {
+
+    auto cards = hand.getCards();
+    Card* card;
+
+    if (index >= 0 && index < cards.size()) {
+        auto it = cards.begin();
+
+        for (int i = 0; i < index; i++) {
+            it++;
+        }
+
+        card = *it;
+
+        cards.erase(it);
+
+    }
+    else {
+        throw std::out_of_range("Index not valid. Skipping discard.");
+    }
+
+    return card;
 }

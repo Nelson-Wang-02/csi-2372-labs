@@ -27,6 +27,6 @@ public:
     Player& getPlayer2(); // Getter for player 2
     DiscardPile& getDiscardPile(); // Getter for DiscardPile
     TradeArea& getTradeArea(); // Getter for TradeArea
-    bool addNewChain(Player& player, Card* card, int index);
+    bool addNewChain(Player& player, Card* card);
     void addCardtoPlayerChain(Player& player, Card* card);
 };

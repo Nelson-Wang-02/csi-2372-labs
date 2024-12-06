@@ -28,25 +28,35 @@ bool TradeArea::legal(Card* card) const {
 
 //Removes and returns a card of the specified bean name from the TradeArea
 Card* TradeArea::trade(const std::string& beanName) {
-    for (auto it = cards.begin(); it != cards.end(); ++it) {
+    for (auto it = cards.begin(); it != cards.end(); it++) {
         if ((*it)->getName() == beanName) {
             Card* card = *it;
             cards.erase(it);
             return card;
         }
     }
-    throw std::runtime_error("TradeArea: No card of the specified bean type found.");
+    throw std::runtime_error("Trade Area: No card of the specified bean type found.");
 }
 
 int TradeArea::numCards() const {
     return cards.size();
 }
 
+// Top-level output to console.
 std::ostream& operator<<(std::ostream& out, const TradeArea& tradeArea) {
-    for (const auto& card : tradeArea.cards) {
-        card->print(out);
-        out << " ";
+    out << "Trade Area: ";
+
+    if (tradeArea.cards.empty()) {
+        out << "empty" << std::endl;
     }
+    else {
+        for (const auto& card : tradeArea.cards) {
+            card->print(out);
+            out << " ";
+        }
+        out << std::endl;
+    }
+
     return out;
 }
 

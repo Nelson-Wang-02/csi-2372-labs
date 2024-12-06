@@ -40,22 +40,15 @@ void Table::printHand(bool printAll) const {
     player2.printHand(std::cout, printAll);
 }
 
+// Top Level output to console.
 std::ostream& operator<<(std::ostream& out, const Table& table) {
-    out << "Player 1: " << table.player1 << std::endl;
-    out << "Player 2: " << table.player2 << std::endl;
-
-    out << "Deck: " << table.deck.size() << " cards remaining" << std::endl;
-
-    out << "Discard Pile: ";
-    if (table.discardPile.top()) {
-        out << "Empty";
-    }
-    else {
-        table.discardPile.print(out);
-    }
-    out << std::endl;
-
-    out << "Trade Area: " << table.tradeArea << std::endl;
+    out << "--Table--" << std::endl;
+    out << "Deck: " << table.deck.size() << " cards left." << std::endl << std::endl;
+    out << table.player1 << std::endl;
+    out << table.player2 << std::endl;
+    out << table.discardPile << std::endl;
+    out << table.tradeArea << std::endl;
+    out << "---------" << std::endl;
 
     return out;
 }
@@ -88,39 +81,43 @@ TradeArea& Table::getTradeArea() {
     return tradeArea;
 }
 
-bool Table::addNewChain(Player& player, Card* card, int index) {
-    if (player.getChains()[index] == nullptr) {
-        // Create new chain at this index
-        if (card->getName() == "Blue") {
-            player.getChains()[index] = new Chain<Blue>();
-        }
-        else if (card->getName() == "Chili") {
-            player.getChains()[index] = new Chain<Chili>();
-        }
-        else if (card->getName() == "Stink") {
-            player.getChains()[index] = new Chain<Stink>();
-        }
-        else if (card->getName() == "Green") {
-            player.getChains()[index] = new Chain<Green>();
-        }
-        else if (card->getName() == "Soy") {
-            player.getChains()[index] = new Chain<Soy>();
-        }
-        else if (card->getName() == "Black") {
-            player.getChains()[index] = new Chain<Black>();
-        }
-        else if (card->getName() == "Red") {
-            player.getChains()[index] = new Chain<Red>();
-        }
-        else if (card->getName() == "Garden") {
-            player.getChains()[index] = new Chain<Garden>();
-        }
+bool Table::addNewChain(Player& player, Card* card) {
+    // Check if there is no other chains with existing bean.
 
-        player.getChains()[index]->addCard(card);
+    for (int i = 0; i < player.getMaxNumChains(); i++) {
+        if (player.getChains()[i] == nullptr) {
+            // Create new chain at this i
+            if (card->getName() == "Blue") {
+                player.getChains()[i] = new Chain<Blue>();
+            }
+            else if (card->getName() == "Chili") {
+                player.getChains()[i] = new Chain<Chili>();
+            }
+            else if (card->getName() == "Stink") {
+                player.getChains()[i] = new Chain<Stink>();
+            }
+            else if (card->getName() == "Green") {
+                player.getChains()[i] = new Chain<Green>();
+            }
+            else if (card->getName() == "Soy") {
+                player.getChains()[i] = new Chain<Soy>();
+            }
+            else if (card->getName() == "Black") {
+                player.getChains()[i] = new Chain<Black>();
+            }
+            else if (card->getName() == "Red") {
+                player.getChains()[i] = new Chain<Red>();
+            }
+            else if (card->getName() == "Garden") {
+                player.getChains()[i] = new Chain<Garden>();
+            }
 
-        std::cout << "A new chain has been created with card " << card->getName() << ".\n";
+            player.getChains()[i]->addCard(card);
 
-        return true;
+            std::cout << "A new chain has been created with card " << card->getName() << "." << std::endl << std::endl;
+
+            return true;
+        }
     }
 
     return false;
@@ -130,13 +127,32 @@ void Table::addCardtoPlayerChain(Player& player, Card* card) {
     
     bool beanExists = false;
 
+    // If the player does not have the third chain. Choose to buy.
+    if (player.getMaxNumChains() < 3) {
+        std::cout << "Would you like to buy a third chain slot? (yes/no) ";
+        std::string choice;
+        std::cin >> choice;
+
+        std::cout << std::endl;
+
+        if (choice == "yes") {
+            try {
+                player.buyThirdChain();
+            }
+            catch (NotEnoughCoins e) {
+                std::cout << e.what() << std::endl << std::endl;
+            }
+            
+        }
+    }
+
     // Check if the Bean exists in Chains.
     for (auto chain : player.getChains()) {
 
         // If there is the same bean, then add it into the chain.
         if (chain != nullptr && card->getName() == chain->getChainType()) {
             chain->addCard(card);
-            std::cout << "Card " << card->getName() << " has been added to an existing chain.\n";
+            std::cout << "Card " << card->getName() << " has been added to an existing chain." << std::endl << std::endl;
             beanExists = true;
             break;
         }
@@ -147,25 +163,23 @@ void Table::addCardtoPlayerChain(Player& player, Card* card) {
 
         bool foundOpenSlot = false;
 
-        for (int i = 0; i < player.getMaxNumChains(); i++) {
-
-            foundOpenSlot = addNewChain(player, card, i);
-        }
-
+        foundOpenSlot = addNewChain(player, card);
+        
         // Need to sell.
         if (!foundOpenSlot) {
 
-            std::cout << "There are no more chain slots. Please choose one chain to sell.\n";
+            std::cout << "There are no more chain slots. Please sell a chain." << std::endl << std::endl;;
 
             // Show available chains.
 
             for (int i = 0; i < player.getMaxNumChains(); i++) {
                 std::cout << "[" << i << "] ";
                 player.getChains()[i]->print(std::cout);
+                std::cout << std::endl;
             }
 
             int userIndex;
-            std::cout << "Select the chain you'd like to sell by stating the index.\n";
+            std::cout << "Select the chain you'd like to sell by stating the index." << std::endl << std::endl;
             std::cin >> userIndex;
 
             int coins = player.getChains()[userIndex]->sell();
@@ -175,18 +189,13 @@ void Table::addCardtoPlayerChain(Player& player, Card* card) {
             delete player.getChains()[userIndex];
             player.getChains()[userIndex] = nullptr;
 
-            std::cout << "Chain [" << userIndex << "] has been sold for " << coins << " coins.\n";
+            std::cout << "Chain [" << userIndex << "] has been sold for " << coins << " coins." << std::endl << std::endl;
 
             // Create a new chain with the given card.
-            addNewChain(player, card, userIndex);
-
-            std::cout << "New chain created with " << card->getName() << ".\n";
+            addNewChain(player, card);
 
         }
 
     }
-
-
-
 
 }

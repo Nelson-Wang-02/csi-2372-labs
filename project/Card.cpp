@@ -137,8 +137,10 @@ void Red::print(std::ostream& out) const {
 //Garden
 int Garden::getCardsPerCoin(int coins) const {
     switch (coins) {
+    case 1: return 105; // A number larger than deck size. Mitigates a bug in Chain::sell() where numCards >= 0 on i = 4, returning 4 coins.
     case 2: return 2;
     case 3: return 3;
+    case 4: return 105;
     default: return 0;
     }
 }

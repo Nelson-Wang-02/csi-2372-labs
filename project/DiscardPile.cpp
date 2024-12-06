@@ -35,6 +35,7 @@ Card* DiscardPile::top() const {
     return pile.back();
 }
 
+// Print function used for outputting to file.
 void DiscardPile::print(std::ostream& out) const {
     for (const auto& card : pile) {
         card->print(out);
@@ -42,9 +43,17 @@ void DiscardPile::print(std::ostream& out) const {
     }
 }
 
+// Top-level output to console.
 std::ostream& operator<<(std::ostream& out, const DiscardPile& pile) {
-    if (!pile.pile.empty()) {
-        pile.pile.back()->print(out);
+
+    out << "Discard Pile: ";
+
+    if (!pile.top()) {
+        out << "empty" << std::endl;
     }
+    else {
+        out << pile.top()->getName() << std::endl;
+    }
+
     return out;
 }

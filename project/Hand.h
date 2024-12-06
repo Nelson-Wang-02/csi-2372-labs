@@ -17,4 +17,7 @@ public:
     Card* top() const;
     Card* operator[](int index);
     friend std::ostream& operator<<(std::ostream& out, const Hand& hand);
+    //user added
+    // Getter for cards.
+    std::list<Card*>& getCards();
 };

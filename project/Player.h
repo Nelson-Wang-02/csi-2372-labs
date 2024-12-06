@@ -40,5 +40,10 @@ public:
     Hand& getHand();
     // Getter for chains.
     std::vector<Chain_Base*>& getChains();
-
+    // Return the hand count.
+    int const getHandCount();
+    // Method for outputting to file.
+    void print(std::ostream& out);
+    // Method to discard a card.
+    Card* discardCard(int index);
 };
