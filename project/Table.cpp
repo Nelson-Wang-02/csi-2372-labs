@@ -1,14 +1,13 @@
 #include "Table.h"
 #include "CardFactory.h"
 
-
-// Constructor Added for New Game Creation.
-Table::Table(const std::string& p1Name, const std::string& p2Name, const CardFactory* cf) 
-    : player1(p1Name), player2(p2Name), deck(cf->getDeck()) {}
-
 //Constructor for loading game from file
 Table::Table(std::istream& in, const CardFactory* factory)
-    : player1(in, factory), player2(in, factory), deck(in, factory), discardPile(in, factory), tradeArea(in, factory) {}
+    : player1(in, factory), 
+    player2(in, factory), 
+    deck(in, factory), 
+    tradeArea(in, factory),
+    discardPile(in, factory) {}
 
 bool Table::win(std::string& winnerName) const {
     if (deck.empty()) {
@@ -46,8 +45,8 @@ std::ostream& operator<<(std::ostream& out, const Table& table) {
     out << "Deck: " << table.deck.size() << " cards left." << std::endl << std::endl;
     out << table.player1 << std::endl;
     out << table.player2 << std::endl;
-    out << table.discardPile << std::endl;
     out << table.tradeArea << std::endl;
+    out << table.discardPile << std::endl;
     out << "---------" << std::endl;
 
     return out;
@@ -55,6 +54,10 @@ std::ostream& operator<<(std::ostream& out, const Table& table) {
 
 // Destructor
 Table::~Table() {}
+
+// Constructor Added for New Game Creation.
+Table::Table(const std::string& p1Name, const std::string& p2Name, const CardFactory* cf)
+    : player1(p1Name), player2(p2Name), deck(cf->getDeck()) {}
 
 // Getter for Deck.
 Deck& Table::getDeck() {
@@ -112,7 +115,12 @@ bool Table::addNewChain(Player& player, Card* card) {
                 player.getChains()[i] = new Chain<Garden>();
             }
 
-            player.getChains()[i]->addCard(card);
+            try {
+                player.getChains()[i]->addCard(card);
+            }
+            catch (IllegalType e) {
+                std::cout << e.what() << std::endl;
+            }
 
             std::cout << "A new chain has been created with card " << card->getName() << "." << std::endl << std::endl;
 
@@ -151,9 +159,15 @@ void Table::addCardtoPlayerChain(Player& player, Card* card) {
 
         // If there is the same bean, then add it into the chain.
         if (chain != nullptr && card->getName() == chain->getChainType()) {
-            chain->addCard(card);
-            std::cout << "Card " << card->getName() << " has been added to an existing chain." << std::endl << std::endl;
-            beanExists = true;
+            try {
+                chain->addCard(card);
+                std::cout << "Card " << card->getName() << " has been added to an existing chain." << std::endl << std::endl;
+                beanExists = true;
+            }
+            catch (IllegalType e) {
+                std::cout << e.what() << std::endl;
+            }
+
             break;
         }
 
@@ -198,4 +212,28 @@ void Table::addCardtoPlayerChain(Player& player, Card* card) {
 
     }
 
+}
+
+// Print table to a file.
+void Table::print(std::ostream& out) const {
+
+    // Print player 1 details.
+    player1.print(out);
+    out << "." << std::endl;
+
+    // Print player 2 details.
+    player2.print(out);
+    out << "." << std::endl;
+
+    // Print all contents of Deck
+    out << deck << std::endl;
+    out << "." << std::endl;
+
+    // Print entirety of Discard Pile 
+    discardPile.print(out);
+    out << "." << std::endl;
+
+    // Print Trade Area
+    tradeArea.print(out);
+    out << "." << std::endl;
 }

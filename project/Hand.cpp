@@ -49,11 +49,18 @@ Card* Hand::operator[](int index) {
 
 // This should be top-level but since hand is hidden, we only use this for outputting to a file.
 std::ostream& operator<<(std::ostream& out, const Hand& hand) {
-    for (const auto& card : hand.cards) {
-        card->print(out);
-        out << " ";
+
+    if (hand.top()) {
+        for (const auto& card : hand.cards) {
+            card->print(out);
+            out << " ";
+        }
+    } 
+    else {
+        out << "e";
     }
-    out << std::endl;
+
+
 
     return out;
 }

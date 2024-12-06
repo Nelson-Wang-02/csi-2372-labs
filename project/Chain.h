@@ -36,7 +36,7 @@ public:
     //Constructor for loading game from file
     Chain(std::istream& in, const CardFactory* cardFactory) {
         std::string cardType;
-        while (in >> cardType) {
+        while (in >> cardType && cardType != "." && cardType != "e") {
             //Create cards and add them to chain
             cards.push_back(static_cast<T*>(cardFactory->createCard(cardType)));
         }
@@ -49,7 +49,7 @@ public:
             cards.push_back(typedCard);
         }
         else {
-            throw std::runtime_error("IllegalType: Card type does not match chain type.");
+            throw IllegalType();
         }
         return *this;
     }
@@ -79,12 +79,11 @@ public:
     void print(std::ostream& out) const override {
         if (cards.empty()) return;
 
-        out << cards[0]->getName() << " ";
-
         for (const auto& card : cards) {
             card->print(out);
             out << " ";
         }
+        out << ".";
     }
 
     // User-defined function for getting the bean of card.
@@ -92,6 +91,7 @@ public:
         return cards.empty() ? "Empty" : cards[0]->getName();
     }
 
+    // External use to add a card to the chain.
     void addCard(Card* card) {
         operator+=(card);
 

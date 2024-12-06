@@ -19,7 +19,7 @@ public:
     Card* trade(const std::string& beanName);
     int numCards() const;
     friend std::ostream& operator<<(std::ostream& out, const TradeArea& tradeArea);
-
-    // Getter
-    std::list<Card*>& getCards();
+    // user-defined
+    std::list<Card*>& getCards(); // Getter for cards. 
+    void print(std::ostream& out) const; // Method for outputting to file. 
 };

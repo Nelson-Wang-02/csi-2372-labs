@@ -43,7 +43,7 @@ public:
     // Return the hand count.
     int const getHandCount();
     // Method for outputting to file.
-    void print(std::ostream& out);
+    void print(std::ostream& out) const;
     // Method to discard a card.
     Card* discardCard(int index);
 };

@@ -10,12 +10,33 @@ using namespace std;
 void saveGame(const Table& table, const string& filename) {
     ofstream file(filename);
     if (file.is_open()) {
-        file << table;
+        table.print(file);
         file.close();
         cout << "Game saved to " << filename << endl;
     }
     else {
         cerr << "Unable to save game to " << filename << endl;
+    }
+}
+
+void loadGame(Table*& table, const string& filename, const CardFactory* factory) {
+    ifstream file(filename);
+
+    if (file.is_open()) {
+        try {
+            table = new Table(file, factory);
+
+        }
+        catch (runtime_error e) {
+            cout << e.what() << endl;
+        }
+
+        file.close();
+        cout << "Game loaded from " << filename << endl << endl;
+
+    } 
+    else {
+        cout << "Failed to load game from file. Starting new game." << endl << endl;
     }
 }
 
@@ -49,17 +70,11 @@ int main() {
         }
 
     }
-    // Needs work
+    // Load game from file.
     else if (choice == "load") {
-        ifstream file("saved_game.txt");
-        if (file.is_open()) {
-            table = new Table(file, factory);
-            file.close();
-        }
-        else {
-            cerr << "No saved game found. Starting a new game." << endl;
-            return 1;
-        }
+        
+        loadGame(table, "saved_game.txt", factory);
+
     }
     else {
         cerr << "Invalid input. Exiting game." << endl;
@@ -71,19 +86,21 @@ int main() {
         cout << *table;
 
         // Pause and save game
-        //cout << "Do you want to pause the game and save? (yes/no): ";
-        //cin >> choice;
-        //if (choice == "yes") {
-        //    saveGame(*table, "saved_game.txt");
-        //    delete table;
-        //    return 0;
-        //}
+        cout << "Do you want to pause the game and save? (yes/no): ";
+        cin >> choice;
+        cout << endl;
+
+        if (choice == "yes") {
+            saveGame(*table, "saved_game.txt");
+            delete table;
+            return 0;
+        }
 
         // Player turns
         for (int i = 0; i < 2; i++) {
             // Get the current player from via table object
             Player& currentPlayer = (i == 0) ? table->getPlayer1() : table->getPlayer2();
-            cout << "It's " << currentPlayer.getName() << "'s turn!" << endl << endl;
+            cout << "***** It's " << currentPlayer.getName() << "'s turn! *****" << endl << endl;
 
             // Draw top card from deck
             currentPlayer.getHand() += table->getDeck().draw();
@@ -145,44 +162,49 @@ int main() {
             table->addCardtoPlayerChain(currentPlayer, topCard);
 
             //3. The player has the option to repeat step 2. Ask if the player wants to play again.
-            topCard = currentPlayer.getHand().top();
+            if (currentPlayer.getHand().top()) {
+                topCard = currentPlayer.getHand().top();
 
-            cout << "Do you want to play the next card: " << topCard->getName() << "? (yes/no) ";
-            cin >> choice;
+                cout << "Do you want to play the next card: " << topCard->getName() << "? (yes/no) ";
+                cin >> choice;
 
-            cout << endl;
+                cout << endl;
 
-            if (choice == "yes") {
-                topCard = currentPlayer.getHand().play();
+                if (choice == "yes") {
+                    topCard = currentPlayer.getHand().play();
 
-                table->addCardtoPlayerChain(currentPlayer, topCard);
+                    table->addCardtoPlayerChain(currentPlayer, topCard);
+                }
+
+                // 4. Discard one arbitrary card to the discard pile face up (revealed).
+                currentPlayer.printHand(cout, false);
+                cout << endl;
+
+                cout << "Do you want to discard a card? You hold: " << currentPlayer.getHandCount() << " cards. (yes/no)";
+                cin >> choice;
+                cout << endl;
+
+                if (choice == "yes") {
+                    int index;
+                    cout << "Enter the index of the card to discard (starting from 0): ";
+                    cin >> index;
+                    cout << endl;
+
+                    try {
+                        Card* discardedCard = currentPlayer.discardCard(index);
+
+                        table->getDiscardPile() += discardedCard;
+                    }
+                    catch (out_of_range e) {
+                        cout << e.what() << endl;
+                    }
+
+                }
             }
-             
-            // 4. Discard one arbitrary card to the discard pile face up (revealed).
-             currentPlayer.printHand(cout, false);
-             cout << endl;
-
-             cout << "Do you want to discard a card? You hold: " << currentPlayer.getHandCount() << " cards. (yes/no)";
-             cin >> choice;
-             cout << endl;
-
-             if (choice == "yes") {
-                 int index;
-                 cout << "Enter the index of the card to discard (starting from 0): ";
-                 cin >> index;
-                 cout << endl;
-
-                 try {
-                     Card* discardedCard = currentPlayer.discardCard(index);
-
-                     table->getDiscardPile() += discardedCard;
-                 }
-                 catch (out_of_range e) {
-                     cout << e.what() << endl;
-                 }
-
-             }
-
+            else {
+                cout << "No more cards in hand! Proceeding." << endl << endl;
+            }
+  
             // 5. Draw three cards to TradeArea, draw from discard pile as long as the card matches one of the beans in trade area.
             // Once top card does not match a bean in trade area or if discard pile is empty:
             // Player can either chain cards from hand or place into trade area. 
@@ -196,7 +218,7 @@ int main() {
              // While top card of discard pile matches an existing card in the trade area or the pile is not empty.
              while (table->getDiscardPile().top() && table->getTradeArea().legal(table->getDiscardPile().top())) {
                  // Draw the top-most card from the discard pile and place it in the trade area.
-                 cout << "Drew " << table->getDiscardPile().top() << " from Discard Pile to Trade Area." << endl;
+                 cout << "Drew " << table->getDiscardPile().top()->getName() << " from Discard Pile to Trade Area." << endl;
                  table->getTradeArea() += table->getDiscardPile().pickUp();
              }
 

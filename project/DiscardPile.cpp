@@ -2,9 +2,21 @@
 
 //Constructor for reconstructing DiscardPile from file
 DiscardPile::DiscardPile(std::istream& in, const CardFactory* factory) {
-    std::string cardName;
-    while (in >> cardName) {
-        Card* card = factory->createCard(cardName);
+    std::string line;
+
+    in >> line;
+
+    if (line != "discardpile") {
+        throw std::runtime_error("Expected 'discardpile' but found: " + line);
+    }
+
+    while (in >> line && line != ".") {
+        if (line == "e") {
+            continue;
+        }
+
+        Card* card = factory->createCard(line);
+
         if (card) {
             pile.push_back(card);
         }
@@ -37,10 +49,19 @@ Card* DiscardPile::top() const {
 
 // Print function used for outputting to file.
 void DiscardPile::print(std::ostream& out) const {
-    for (const auto& card : pile) {
-        card->print(out);
-        out << *card << " ";
+    out << "discardpile" << std::endl;
+
+    if (!pile.empty()) {
+        for (const auto& card : pile) {
+            card->print(out);
+            out << " ";
+        }
     }
+    else {
+        out << "e";
+    }
+
+    out << std::endl;
 }
 
 // Top-level output to console.

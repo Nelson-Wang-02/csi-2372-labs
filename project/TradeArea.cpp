@@ -2,9 +2,21 @@
 
 //Constructor for reconstructing TradeArea from file
 TradeArea::TradeArea(std::istream& in, const CardFactory* factory) {
-    std::string cardName;
-    while (in >> cardName) {
-        Card* card = factory->createCard(cardName);
+    std::string line;
+
+    in >> line;
+
+    if (line != "tradearea") {
+        throw std::runtime_error("Expected 'tradearea' but found " + line);
+    }
+
+    while (in >> line && line != ".") {
+
+        if (line == "e"){ 
+            continue;
+        }
+
+        Card* card = factory->createCard(line);
         if (card) {
             cards.push_back(card);
         }
@@ -63,4 +75,20 @@ std::ostream& operator<<(std::ostream& out, const TradeArea& tradeArea) {
 // Getter for cards
 std::list<Card*>& TradeArea::getCards() {
     return cards;
+}
+
+void TradeArea::print(std::ostream& out) const {
+    out << "tradearea" << std::endl;
+
+    if (!cards.empty()) {
+        for (const auto& card : cards) {
+            card->print(out);
+            out << " ";
+        }
+    }
+    else {
+        out << "e";
+    }
+
+    out << std::endl;
 }

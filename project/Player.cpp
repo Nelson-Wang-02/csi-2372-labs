@@ -8,17 +8,43 @@ Player::Player(const std::string& name)
 }
 
 //Constructor for loading game from file
-Player::Player(std::istream& in, const CardFactory* factory)
-    : coins(0), maxChains(2), hand(in, factory) {
+Player::Player(std::istream& in, const CardFactory* factory) {
     in >> name >> coins >> maxChains;
 
-    int numChains;
-    in >> numChains;
-    for (int i = 0; i < numChains; ++i) {
-        std::string chainType;
-        in >> chainType;
-        chains.push_back(new Chain<Card>(in, factory));
+    std::string line;
+
+    in >> line;
+
+    if (line != "chains") {
+        throw std::runtime_error("Expected header 'chains' but got " + line);
     }
+
+    // Read chains.
+    chains.resize(maxChains, nullptr);
+
+    for (int i = 0; i < maxChains; ++i) {
+        in >> line;
+
+        if (line != "e") {
+            chains.push_back(new Chain<Card>(in, factory));
+        }  
+    }
+
+    // Read hand.
+    in >> line;
+
+    if (line != "hand") {
+        throw std::runtime_error("Expected header 'hand' but got " + line);
+    }
+
+    while (in >> line && line != ".") {
+        Card* card = factory->createCard(line);
+
+        if (card) {
+            hand += card;
+        }
+    }
+
 }
 
 std::string Player::getName() const {
@@ -91,6 +117,7 @@ std::ostream& operator<<(std::ostream& out, const Player& player) {
             out << "empty";
         } 
         else {
+            out << chain->getChainType() << " ";
             chain->print(out);
         }
 
@@ -122,13 +149,22 @@ int const Player::getHandCount(){
 }
 
 // Print function used to output to file.
-void Player::print(std::ostream& out) {
-    out << name << " " << coins << " " << maxChains << " ";
+void Player::print(std::ostream& out) const {
+    out << name << " " << coins << " " << maxChains << std::endl;
+
+    out << "chains" << std::endl;
+
     for (const auto& chain : chains) {
         if (chain != nullptr) {
-            out << *chain << "\n";
+            out << *chain << std::endl;
+        }
+        else {
+            out << "e" << std::endl;
         }
     }
+
+    out << "hand" << std::endl;
+    out << hand << std::endl;
 
 }
 

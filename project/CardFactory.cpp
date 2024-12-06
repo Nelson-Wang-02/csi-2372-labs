@@ -57,14 +57,14 @@ Deck CardFactory::getDeck() const {
 }
 
 Card* CardFactory::createCard(const std::string& cardName) const {
-    if (cardName == "Blue") return new Blue();
-    if (cardName == "Chili") return new Chili();
-    if (cardName == "Stink") return new Stink();
-    if (cardName == "Green") return new Green();
-    if (cardName == "Soy") return new Soy();
-    if (cardName == "Black") return new Black();
-    if (cardName == "Red") return new Red();
-    if (cardName == "Garden") return new Garden();
+    if (cardName == "B") return new Blue();
+    if (cardName == "C") return new Chili();
+    if (cardName == "S") return new Stink();
+    if (cardName == "G") return new Green();
+    if (cardName == "s") return new Soy();
+    if (cardName == "b") return new Black();
+    if (cardName == "R") return new Red();
+    if (cardName == "g") return new Garden();
 
     throw std::runtime_error("Unknown card type: " + cardName);
 }
